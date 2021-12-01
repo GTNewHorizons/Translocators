@@ -1,3 +1,16 @@
+GTNH Modifications:
+
+Copyright (c) 2021 GTNH Team
+
+GTNH Changes are licensed under the GNU LESSER GENERAL PUBLIC LICENSE
+See COPYING & COPYING.LESSER
+
+Feel free to use any of our changes, but please give back any changes you make :)
+
+-----------------------------------------------------------------------------
+
+Original License based on https://github.com/Chicken-Bones/Translocators
+
 The MIT License (MIT)
 
 Copyright (c) 2014 ChickenBones
