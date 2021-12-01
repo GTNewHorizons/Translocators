@@ -64,7 +64,7 @@ dependencies {
     compile("com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev")
 }
 
-version =  "${project.config.mod_version}." + System.getenv("BUILD_NUMBER") ?: "1"
+version =  "${project.config.mod_version}" ?: "1"
 
 println  config.mc_version + "-" + config.forge_version
 // Setup the forge minecraft plugin data. Specify the preferred forge/minecraft version here
@@ -103,18 +103,17 @@ processResources {
 version = "${project.minecraft.version}-${project.version}"
 
 jar {
-    classifier = 'universal'
+    archiveClassifier.set('universal')
 }
 
 task sourceJar(type: Jar) {
-    from sourceSets.main.java
-    from new File(root, "dev")
-    classifier = 'src'
+    from sourceSets.main.allSource
+    archiveClassifier.set('sources')
 }
 
 task devJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'dev'
+    archiveClassifier.set('dev')
 }
 
 // Tell the artifact system about our extra jars
