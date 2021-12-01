@@ -3,27 +3,47 @@ buildscript {
         mavenCentral()
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://maven.minecraftforge.net"
         }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name = "jitpack"
+            url = "https://jitpack.io"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath "com.github.GTNewHorizons:ForgeGradle:1.2.4"
     }
 }
+
+plugins {
+    id 'idea'
+    id 'scala'
+    id("org.ajoberstar.grgit") version("3.1.1")
+    id("com.github.johnrengelman.shadow") version("4.0.4")
+    id("com.palantir.git-version") version("0.12.3")
+}
+
+apply plugin: 'forge'
 
 //add dependency repositories
 repositories {
 	maven {
 		name = "chickenbones"
-		url = "http://chickenbones.net/maven"
+		url = "https://chickenbones.net/maven"
 	}
+    maven {
+        name = "Overmind forge repo mirror"
+        url = "https://gregtech.overminddl1.com/"
+    }
+    maven {
+        name = "jitpack"
+        url = "https://jitpack.io"
+    }
 }
-
-apply plugin: 'forge'
 
 group = "codechicken" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Translocator"
@@ -39,17 +59,17 @@ configFile.withReader {
 }
 
 dependencies {
-    compile "codechicken:CodeChickenLib:${config.mc_version}-${config.ccl_version}:dev"
-    compile "codechicken:CodeChickenCore:${config.mc_version}-${config.ccc_version}:dev"
-    compile "codechicken:NotEnoughItems:${config.mc_version}-${config.nei_version}:dev"
+    compile("com.github.GTNewHorizons:CodeChickenLib:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:CodeChickenCore:master-SNAPSHOT:dev")
+    compile("com.github.GTNewHorizons:NotEnoughItems:master-SNAPSHOT:dev")
 }
 
-version =  "${project.config.mod_version}." + System.getenv("BUILD_NUMBER") ?: "1"
+version =  "${project.config.mod_version}" ?: "1"
 
 println  config.mc_version + "-" + config.forge_version
 // Setup the forge minecraft plugin data. Specify the preferred forge/minecraft version here
 minecraft {
-    version = config.mc_version + "-" + config.forge_version
+    version = config.mc_version + "-" + config.forge_version + "-" + config.mc_version
 }
 
 def root = project.projectDir.parentFile
@@ -83,18 +103,17 @@ processResources {
 version = "${project.minecraft.version}-${project.version}"
 
 jar {
-    classifier = 'universal'
+    archiveClassifier.set('universal')
 }
 
 task sourceJar(type: Jar) {
-    from sourceSets.main.java
-    from new File(root, "dev")
-    classifier = 'src'
+    from sourceSets.main.allSource
+    archiveClassifier.set('sources')
 }
 
 task devJar(type: Jar) {
     from sourceSets.main.output
-    classifier = 'dev'
+    archiveClassifier.set('dev')
 }
 
 // Tell the artifact system about our extra jars
