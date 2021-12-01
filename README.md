@@ -1,7 +1,7 @@
 Translocators
 ==============
 
-THIS PROJECT IS RETIRED: See [here] for the current repo.
+GTNH Fork for 1.7.10
 
 Overview Translocators is a mod that allows you to transfer items and liquids between nearby inventories with a heavily configureable amount of control in a way that feels natural to Minecraft. It was developed in 36 hours during the ModJam modding contest and managed to take first prize.
 
@@ -28,12 +28,3 @@ Crafting Grid The crafting grid is placed by pressing C (default key bind, chang
 - Right clicking with items will add/remove them from the grid.
 - Pressing C again on the grid, will craft the items
 
-Current recommended and latest builds can be found at http://chickenbones.net/Pages/links.html
-
-Current maven: http://chickenbones.net/maven/
-
-Join us on IRC:
-- Server: Esper.net
-- Channel: #ChickenBones
-
-[here]: <https://github.com/TheCBProject/Translocators>
