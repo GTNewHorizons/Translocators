@@ -1,14 +1,14 @@
 [
 {
-  "modid": "Translocator",
-  "name": "Translocator",
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "Translocates stuff!
   
 Credits: MouseCop - Textures
 
 Supporters:",
-  "version": "${version}",
-  "mcversion": "${mc_version}",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "http://www.minecraftforum.net/topic/909223",
   "authorList": [ "ChickenBones" ],
   "dependencies": [ "CodeChickenCore" ]
