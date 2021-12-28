@@ -14,7 +14,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = "Translocator", name = "Translocator",
+@Mod(modid = "Translocator", name = "Translocator", version = "GRADLETOKEN_VERSION",
         dependencies = "required-after:CodeChickenCore@[" + CodeChickenCorePlugin.version + ",);required-after:NotEnoughItems",
         acceptedMinecraftVersions = CodeChickenCorePlugin.mcVersion)
 public class Translocator
