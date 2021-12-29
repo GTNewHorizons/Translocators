@@ -1,6 +1,7 @@
 package codechicken.translocator;
 
 import codechicken.nei.api.API;
+import cpw.mods.fml.common.Loader;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -38,32 +39,33 @@ public class TranslocatorProxy
         GameRegistry.registerTileEntity(TileCraftingGrid.class, "craftingGrid");
 
         PacketCustom.assignHandler(TranslocatorSPH.channel, new TranslocatorSPH());
+        if (!Loader.isModLoaded("dreamcraft")){
+            GameRegistry.addRecipe(new ItemStack(blockTranslocator, 2, 0),
+                    "rer",
+                    "ipi",
+                    "rgr",
+                    'r', Items.redstone,
+                    'e', Items.ender_pearl,
+                    'i', Items.iron_ingot,
+                    'g', Items.gold_ingot,
+                    'p', Blocks.piston);
+            GameRegistry.addRecipe(new ItemStack(blockTranslocator, 2, 1),
+                    "rer",
+                    "ipi",
+                    "rlr",
+                    'r', Items.redstone,
+                    'e', Items.ender_pearl,
+                    'i', Items.iron_ingot,
+                    'l', new ItemStack(Items.dye, 1, 4),
+                    'p', Blocks.piston);
+            
+            GameRegistry.addShapelessRecipe(new ItemStack(Items.diamond),
+                    itemDiamondNugget, itemDiamondNugget, itemDiamondNugget,
+                    itemDiamondNugget, itemDiamondNugget, itemDiamondNugget,
+                    itemDiamondNugget, itemDiamondNugget, itemDiamondNugget);
 
-        GameRegistry.addRecipe(new ItemStack(blockTranslocator, 2, 0),
-                "rer",
-                "ipi",
-                "rgr",
-                'r', Items.redstone,
-                'e', Items.ender_pearl,
-                'i', Items.iron_ingot,
-                'g', Items.gold_ingot,
-                'p', Blocks.piston);
-        GameRegistry.addRecipe(new ItemStack(blockTranslocator, 2, 1),
-                "rer",
-                "ipi",
-                "rlr",
-                'r', Items.redstone,
-                'e', Items.ender_pearl,
-                'i', Items.iron_ingot,
-                'l', new ItemStack(Items.dye, 1, 4),
-                'p', Blocks.piston);
+            GameRegistry.addShapelessRecipe(new ItemStack(itemDiamondNugget, 9), Items.diamond);
+        }
         API.hideItem(new ItemStack(blockCraftingGrid));
-
-        GameRegistry.addShapelessRecipe(new ItemStack(Items.diamond),
-                itemDiamondNugget, itemDiamondNugget, itemDiamondNugget,
-                itemDiamondNugget, itemDiamondNugget, itemDiamondNugget,
-                itemDiamondNugget, itemDiamondNugget, itemDiamondNugget);
-
-        GameRegistry.addShapelessRecipe(new ItemStack(itemDiamondNugget, 9), Items.diamond);
     }
 }
