@@ -1,19 +1,11 @@
 package codechicken.translocator;
 
+import static codechicken.lib.vec.Rotation.*;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-
-import codechicken.lib.math.MathHelper;
-import codechicken.lib.raytracer.RayTracer;
-import codechicken.lib.raytracer.IndexedCuboid6;
-import codechicken.lib.vec.BlockCoord;
-import codechicken.lib.vec.Vector3;
-import codechicken.translocator.TileTranslocator.Attachment;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -36,10 +28,18 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.fluids.IFluidHandler;
 
-import static codechicken.lib.vec.Rotation.*;
+import codechicken.lib.math.MathHelper;
+import codechicken.lib.raytracer.IndexedCuboid6;
+import codechicken.lib.raytracer.RayTracer;
+import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
+import codechicken.translocator.TileTranslocator.Attachment;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockTranslocator extends Block
-{
+public class BlockTranslocator extends Block {
+
     private RayTracer rayTracer = new RayTracer();
 
     public BlockTranslocator() {
@@ -96,17 +96,14 @@ public class BlockTranslocator extends Block
         TileTranslocator ttrans = (TileTranslocator) world.getTileEntity(x, y, z);
         int meta = world.getBlockMetadata(x, y, z);
 
-        for (int i = 0; i < 6; i++)
-            if (ttrans.attachments[i] != null && !canExistOnSide(world, x, y, z, i, meta))
-                if (ttrans.harvestPart(i, true))
-                    break;
+        for (int i = 0; i < 6; i++) if (ttrans.attachments[i] != null && !canExistOnSide(world, x, y, z, i, meta))
+            if (ttrans.harvestPart(i, true)) break;
     }
 
     @Override
     public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willharvest) {
         MovingObjectPosition hit = RayTracer.retraceBlock(world, player, x, y, z);
-        if (hit == null)
-            return false;
+        if (hit == null) return false;
 
         TileTranslocator ttrans = (TileTranslocator) world.getTileEntity(x, y, z);
         return ttrans.harvestPart(hit.subHit % 6, !player.capabilities.isCreativeMode);
@@ -125,14 +122,10 @@ public class BlockTranslocator extends Block
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int md, int fortune) {
         ArrayList<ItemStack> ai = new ArrayList<ItemStack>();
-        if (world.isRemote)
-            return ai;
+        if (world.isRemote) return ai;
 
         TileTranslocator ttrans = (TileTranslocator) world.getTileEntity(x, y, z);
-        if (ttrans != null)
-            for (Attachment a : ttrans.attachments)
-                if (a != null)
-                    ai.addAll(a.getDrops());
+        if (ttrans != null) for (Attachment a : ttrans.attachments) if (a != null) ai.addAll(a.getDrops());
 
         return ai;
     }
@@ -144,13 +137,17 @@ public class BlockTranslocator extends Block
 
     @Override
     public MovingObjectPosition collisionRayTrace(World world, int x, int y, int z, Vec3 start, Vec3 end) {
-        return rayTracer.rayTraceCuboids(new Vector3(start), new Vector3(end), getParts(world, x, y, z), new BlockCoord(x, y, z), this);
+        return rayTracer.rayTraceCuboids(
+                new Vector3(start),
+                new Vector3(end),
+                getParts(world, x, y, z),
+                new BlockCoord(x, y, z),
+                this);
     }
 
     public List<IndexedCuboid6> getParts(World world, int x, int y, int z) {
         TileTranslocator tile = (TileTranslocator) world.getTileEntity(x, y, z);
-        if (tile == null)
-            return null;
+        if (tile == null) return null;
 
         List<IndexedCuboid6> cuboids = new LinkedList<IndexedCuboid6>();
         tile.addTraceableCuboids(cuboids);
@@ -162,15 +159,14 @@ public class BlockTranslocator extends Block
         List<IndexedCuboid6> cuboids = getParts(world, x, y, z);
         for (IndexedCuboid6 cb : cuboids) {
             AxisAlignedBB aabb = cb.toAABB();
-            if (aabb.intersectsWith(ebb))
-                list.add(aabb);
+            if (aabb.intersectsWith(ebb)) list.add(aabb);
         }
     }
 
     @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        if (world.isRemote)
-            return true;
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX,
+            float hitY, float hitZ) {
+        if (world.isRemote) return true;
 
         MovingObjectPosition hit = RayTracer.retraceBlock(world, player, x, y, z);
         TileTranslocator ttrans = (TileTranslocator) world.getTileEntity(x, y, z);
@@ -193,8 +189,15 @@ public class BlockTranslocator extends Block
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onBlockHighlight(DrawBlockHighlightEvent event) {
-        if (event.target.typeOfHit == MovingObjectType.BLOCK && event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ) == this)
-            RayTracer.retraceBlock(event.player.worldObj, event.player, event.target.blockX, event.target.blockY, event.target.blockZ);
+        if (event.target.typeOfHit == MovingObjectType.BLOCK
+                && event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ)
+                        == this)
+            RayTracer.retraceBlock(
+                    event.player.worldObj,
+                    event.player,
+                    event.target.blockX,
+                    event.target.blockY,
+                    event.target.blockZ);
     }
 
     @Override
@@ -217,6 +220,5 @@ public class BlockTranslocator extends Block
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister par1IconRegister) {
-    }
+    public void registerBlockIcons(IIconRegister par1IconRegister) {}
 }

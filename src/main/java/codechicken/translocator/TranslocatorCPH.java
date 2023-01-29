@@ -3,14 +3,15 @@ package codechicken.translocator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.tileentity.TileEntity;
+
 import codechicken.core.ClientUtils;
 import codechicken.lib.inventory.InventorySimple;
 import codechicken.lib.packet.ICustomPacketTile;
 import codechicken.lib.packet.PacketCustom;
 import codechicken.lib.packet.PacketCustom.IClientPacketHandler;
 
-public class TranslocatorCPH implements IClientPacketHandler
-{
+public class TranslocatorCPH implements IClientPacketHandler {
+
     public static Object channel = Translocator.instance;
 
     @Override
@@ -20,13 +21,14 @@ public class TranslocatorCPH implements IClientPacketHandler
             case 2:
             case 3:
                 TileEntity tile = mc.theWorld.getTileEntity(packet.readInt(), packet.readInt(), packet.readInt());
-                if (tile instanceof ICustomPacketTile)
-                    ((ICustomPacketTile) tile).handleDescriptionPacket(packet);
+                if (tile instanceof ICustomPacketTile) ((ICustomPacketTile) tile).handleDescriptionPacket(packet);
                 break;
             case 4:
                 int windowId = packet.readUByte();
-                GuiTranslocator gui = new GuiTranslocator(new ContainerItemTranslocator(
-                        new InventorySimple(9, packet.readUShort(), packet.readString()), mc.thePlayer.inventory));
+                GuiTranslocator gui = new GuiTranslocator(
+                        new ContainerItemTranslocator(
+                                new InventorySimple(9, packet.readUShort(), packet.readString()),
+                                mc.thePlayer.inventory));
                 ClientUtils.openSMPGui(windowId, gui);
                 break;
             case 5:

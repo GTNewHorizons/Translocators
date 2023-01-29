@@ -1,10 +1,5 @@
 package codechicken.translocator;
 
-import codechicken.lib.inventory.InventoryUtils;
-import codechicken.lib.packet.ICustomPacketTile;
-import codechicken.lib.packet.PacketCustom;
-import codechicken.lib.vec.Vector3;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -15,13 +10,19 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
-{
+import codechicken.lib.inventory.InventoryUtils;
+import codechicken.lib.packet.ICustomPacketTile;
+import codechicken.lib.packet.PacketCustom;
+import codechicken.lib.vec.Vector3;
+import cpw.mods.fml.common.FMLCommonHandler;
+
+public class TileCraftingGrid extends TileEntity implements ICustomPacketTile {
+
     public ItemStack[] items = new ItemStack[9];
     public ItemStack result = null;
     public int rotation = 0;
 
-    public int timeout = 400;//20 seconds
+    public int timeout = 400;// 20 seconds
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
@@ -50,9 +51,7 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
 
     public void dropItems() {
         Vector3 drop = Vector3.fromTileEntityCenter(this);
-        for (ItemStack item : items)
-            if (item != null)
-                InventoryUtils.dropItem(item, worldObj, drop);
+        for (ItemStack item : items) if (item != null) InventoryUtils.dropItem(item, worldObj, drop);
     }
 
     @Override
@@ -60,8 +59,7 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
         PacketCustom packet = new PacketCustom(TranslocatorSPH.channel, 3);
         packet.writeCoord(xCoord, yCoord, zCoord);
         packet.writeByte(rotation);
-        for (ItemStack item : items)
-            packet.writeItemStack(item);
+        for (ItemStack item : items) packet.writeItemStack(item);
 
         return packet.toPacket();
     }
@@ -70,8 +68,7 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
     public void handleDescriptionPacket(PacketCustom packet) {
         rotation = packet.readUByte();
 
-        for (int i = 0; i < 9; i++)
-            items[i] = packet.readItemStack();
+        for (int i = 0; i < 9; i++) items[i] = packet.readItemStack();
 
         updateResult();
     }
@@ -79,8 +76,7 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
     public void activate(int subHit, EntityPlayer player) {
         ItemStack held = player.inventory.getCurrentItem();
         if (held == null) {
-            if (items[subHit] != null)
-                giveOrDropItem(items[subHit], player);
+            if (items[subHit] != null) giveOrDropItem(items[subHit], player);
             items[subHit] = null;
         } else {
             if (!InventoryUtils.areStacksIdentical(held, items[subHit])) {
@@ -88,8 +84,7 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
                 items[subHit] = InventoryUtils.copyStack(held, 1);
                 player.inventory.decrStackSize(player.inventory.currentItem, 1);
 
-                if (old != null)
-                    giveOrDropItem(old, player);
+                if (old != null) giveOrDropItem(old, player);
             }
         }
 
@@ -115,10 +110,8 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
     }
 
     private void giveOrDropItem(ItemStack stack, EntityPlayer player) {
-        if (player.inventory.addItemStackToInventory(stack))
-            player.inventoryContainer.detectAndSendChanges();
-        else
-            InventoryUtils.dropItem(stack, worldObj, Vector3.fromTileEntityCenter(this));
+        if (player.inventory.addItemStackToInventory(stack)) player.inventoryContainer.detectAndSendChanges();
+        else InventoryUtils.dropItem(stack, worldObj, Vector3.fromTileEntityCenter(this));
     }
 
     public void craft(EntityPlayer player) {
@@ -139,16 +132,15 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
     }
 
     private InventoryCrafting getCraftMatrix() {
-        InventoryCrafting craftMatrix = new InventoryCrafting(new Container()
-        {
+        InventoryCrafting craftMatrix = new InventoryCrafting(new Container() {
+
             @Override
             public boolean canInteractWith(EntityPlayer entityplayer) {
                 return true;
             }
         }, 3, 3);
 
-        for (int i = 0; i < 9; i++)
-            craftMatrix.setInventorySlotContents(i, items[i]);
+        for (int i = 0; i < 9; i++) craftMatrix.setInventorySlotContents(i, items[i]);
 
         return craftMatrix;
     }
@@ -161,8 +153,7 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
 
         for (int slot = 0; slot < 9; ++slot) {
             ItemStack stack = craftMatrix.getStackInSlot(slot);
-            if (stack == null)
-                continue;
+            if (stack == null) continue;
 
             craftMatrix.decrStackSize(slot, 1);
             if (stack.getItem().hasContainerItem(stack)) {
@@ -177,20 +168,17 @@ public class TileCraftingGrid extends TileEntity implements ICustomPacketTile
             }
         }
 
-        for (int i = 0; i < 9; i++)
-            items[i] = craftMatrix.getStackInSlot(i);
+        for (int i = 0; i < 9; i++) items[i] = craftMatrix.getStackInSlot(i);
     }
 
     private void rotateItems(InventoryCrafting inv) {
-        int[] slots = new int[]{0, 1, 2, 5, 8, 7, 6, 3};
+        int[] slots = new int[] { 0, 1, 2, 5, 8, 7, 6, 3 };
         ItemStack[] arrangement = new ItemStack[9];
         arrangement[4] = inv.getStackInSlot(4);
 
-        for (int i = 0; i < 8; i++)
-            arrangement[slots[(i + 2) % 8]] = inv.getStackInSlot(slots[i]);
+        for (int i = 0; i < 8; i++) arrangement[slots[(i + 2) % 8]] = inv.getStackInSlot(slots[i]);
 
-        for (int i = 0; i < 9; i++)
-            inv.setInventorySlotContents(i, arrangement[i]);
+        for (int i = 0; i < 9; i++) inv.setInventorySlotContents(i, arrangement[i]);
     }
 
     public void onPlaced(EntityLivingBase entity) {
