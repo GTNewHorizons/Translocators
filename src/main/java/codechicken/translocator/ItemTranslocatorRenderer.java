@@ -22,6 +22,7 @@ public class ItemTranslocatorRenderer implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+        final CCRenderState state = CCRenderState.instance();
         Vector3 d = new Vector3();
         if (type != ItemRenderType.EQUIPPED && type != ItemRenderType.EQUIPPED_FIRST_PERSON) d.add(-0.5, -0.5, -0.5);
         else d.add(0, -0.2, -0.2);
@@ -30,13 +31,13 @@ public class ItemTranslocatorRenderer implements IItemRenderer {
         GL11.glPushMatrix();
         GL11.glScaled(1.5, 1.5, 1.5);
 
-        CCRenderState.changeTexture("translocator:textures/tex.png");
-        CCRenderState.pullLightmap();
-        CCRenderState.setColour(-1);
-        CCRenderState.useNormals = true;
-        CCRenderState.startDrawing(4);
+        state.changeTexture("translocator:textures/tex.png");
+        state.pullLightmap();
+        state.setColour(-1);
+        state.useNormals = true;
+        state.startDrawing(4);
         TileTranslocatorRenderer.renderAttachment(2, item.getItemDamage(), 1, 0, d.x, d.y, d.z);
-        CCRenderState.draw();
+        state.draw();
 
         GL11.glPopMatrix();
     }
