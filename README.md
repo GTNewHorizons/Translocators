@@ -3,9 +3,12 @@ Translocators
 
 GTNH Fork for 1.7.10
 
-Overview Translocators is a mod that allows you to transfer items and liquids between nearby inventories with a heavily configureable amount of control in a way that feels natural to Minecraft. It was developed in 36 hours during the ModJam modding contest and managed to take first prize.
+## Overview
+
+Translocators is a mod that allows you to transfer items and liquids between nearby inventories with a heavily configureable amount of control in a way that feels natural to Minecraft. It was developed in 36 hours during the ModJam modding contest and managed to take first prize.
 
 Translocators the crafting grid, a placeable one item crafting grid.
+
 The translocator comes in item and liquid forms. You place them on the side of an inventory or tank. They transfer items and liquids within the one block space.
 
 - If the center piece is protruding, items/liquids will flow from this side, to the sides with the center inset.
@@ -22,7 +25,9 @@ The translocator comes in item and liquid forms. You place them on the side of a
 	- On an ejecting face, it will emit if there is no place where any item can be put that matches the filter.
 - Shift-Right clicking on the plate will strip and drop all upgrades placed on the translocator.
 
-Crafting Grid The crafting grid is placed by pressing C (default key bind, changeable in settings) while looking at a solid top surface.
+### Crafting Grid
+
+The crafting grid is placed by pressing C (default key bind, changeable in settings) while looking at a solid top surface.
 
 - The grid will remain for 20 seconds, or 2 minutes since it’s last use.
 - Right clicking with items will add/remove them from the grid.

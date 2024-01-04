@@ -2,15 +2,11 @@
 {
   "modid": "${modId}",
   "name": "${modName}",
-  "description": "Translocates stuff!
-  
-Credits: MouseCop - Textures
-
-Supporters:",
+  "description": "Translocates stuff!",
+  "Credits": "MouseCop - Textures",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
   "url": "http://www.minecraftforum.net/topic/909223",
-  "authorList": [ "ChickenBones" ],
-  "dependencies": [ "CodeChickenCore" ]
+  "authorList": [ "ChickenBones" ]
 }
 ]

@@ -52,13 +52,14 @@ public class TileTranslocatorRenderer extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float f) {
         TileTranslocator ttrans = (TileTranslocator) tileentity;
         double time = ClientUtils.getRenderTime();
+        final CCRenderState state = CCRenderState.instance();
 
-        CCRenderState.reset();
-        CCRenderState.changeTexture("translocator:textures/tex.png");
-        CCRenderState.pullLightmap();
-        CCRenderState.useNormals = true;
-        CCRenderState.setColour(-1);
-        CCRenderState.startDrawing(4);
+        state.reset();
+        state.changeTexture("translocator:textures/tex.png");
+        state.pullLightmap();
+        state.useNormals = true;
+        state.setColour(-1);
+        state.startDrawing(4);
 
         for (int i = 0; i < 6; i++) {
             Attachment a = ttrans.attachments[i];
@@ -71,7 +72,7 @@ public class TileTranslocatorRenderer extends TileEntitySpecialRenderer {
                     y,
                     z);
         }
-        CCRenderState.draw();
+        state.draw();
 
         if (ttrans instanceof TileItemTranslocator) {
             TileItemTranslocator titrans = (TileItemTranslocator) ttrans;
@@ -100,8 +101,8 @@ public class TileTranslocatorRenderer extends TileEntitySpecialRenderer {
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        CCRenderState.changeTexture("translocator:textures/particle.png");
-        CCRenderState.startDrawing(7);
+        state.changeTexture("translocator:textures/particle.png");
+        state.startDrawing(7);
         for (int src = 0; src < 6; src++) {
             Attachment asrc = ttrans.attachments[src];
             if (asrc == null || !asrc.a_eject) continue;
@@ -112,7 +113,7 @@ public class TileTranslocatorRenderer extends TileEntitySpecialRenderer {
                     renderLink(src, dst, time, ttrans.xCoord, ttrans.yCoord, ttrans.zCoord);
             }
         }
-        CCRenderState.draw();
+        state.draw();
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_LIGHTING);
     }
@@ -120,8 +121,9 @@ public class TileTranslocatorRenderer extends TileEntitySpecialRenderer {
     private void drawLiquidSpiral(int src, int dst, FluidStack stack, double start, double end, double time,
             double theta0, double x, double y, double z) {
         IIcon tex = RenderUtils.prepareFluidRender(stack, 255);
+        final CCRenderState state = CCRenderState.instance();
 
-        CCRenderState.startDrawing(7);
+        state.startDrawing(7);
         Tessellator t = Tessellator.instance;
         t.setTranslation(x, y, z);
 
@@ -169,7 +171,7 @@ public class TileTranslocatorRenderer extends TileEntitySpecialRenderer {
             next = tmp;
         }
 
-        CCRenderState.draw();
+        state.draw();
         t.setTranslation(0, 0, 0);
 
         RenderUtils.postFluidRender();
