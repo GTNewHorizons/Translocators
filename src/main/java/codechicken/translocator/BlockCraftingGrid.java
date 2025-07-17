@@ -39,12 +39,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockCraftingGrid extends Block {
 
     private RayTracer rayTracer = new RayTracer();
+    public EventHandler handler;
 
     @SideOnly(Side.CLIENT)
     public IIcon gridIcon;
 
     public BlockCraftingGrid() {
         super(Material.wood);
+        handler = new EventHandler();
     }
 
     @Override
@@ -97,20 +99,6 @@ public class BlockCraftingGrid extends Block {
         if (tcraft != null) for (ItemStack item : tcraft.items) if (item != null) ai.add(item.copy());
 
         return ai;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onBlockHighlight(DrawBlockHighlightEvent event) {
-        if (event.target.typeOfHit == MovingObjectType.BLOCK
-                && event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ)
-                        == this)
-            RayTracer.retraceBlock(
-                    event.player.worldObj,
-                    event.player,
-                    event.target.blockX,
-                    event.target.blockY,
-                    event.target.blockZ);
     }
 
     @Override
@@ -211,5 +199,22 @@ public class BlockCraftingGrid extends Block {
     public void registerBlockIcons(IIconRegister register) {
         super.registerBlockIcons(register);
         gridIcon = register.registerIcon("translocator:craftingGrid");
+    }
+
+    public class EventHandler {
+
+        @SideOnly(Side.CLIENT)
+        @SubscribeEvent
+        public void onBlockHighlight(DrawBlockHighlightEvent event) {
+            if (event.target.typeOfHit == MovingObjectType.BLOCK
+                    && event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ)
+                            == BlockCraftingGrid.this)
+                RayTracer.retraceBlock(
+                        event.player.worldObj,
+                        event.player,
+                        event.target.blockX,
+                        event.target.blockY,
+                        event.target.blockZ);
+        }
     }
 }

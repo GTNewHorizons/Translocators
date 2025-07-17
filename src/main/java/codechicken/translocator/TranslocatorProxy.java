@@ -31,8 +31,8 @@ public class TranslocatorProxy {
 
         GameRegistry.registerBlock(blockTranslocator, ItemTranslocator.class, "translocator");
         GameRegistry.registerBlock(blockCraftingGrid, "craftingGrid");
-        MinecraftForge.EVENT_BUS.register(blockTranslocator);
-        MinecraftForge.EVENT_BUS.register(blockCraftingGrid);
+        MinecraftForge.EVENT_BUS.register(blockTranslocator.handler);
+        MinecraftForge.EVENT_BUS.register(blockCraftingGrid.handler);
 
         GameRegistry.registerTileEntity(TileItemTranslocator.class, "itemTranslocator");
         GameRegistry.registerTileEntity(TileLiquidTranslocator.class, "liquidTranslocator");

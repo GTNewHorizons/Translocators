@@ -41,11 +41,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockTranslocator extends Block {
 
     private RayTracer rayTracer = new RayTracer();
+    public EventHandler handler;
 
     public BlockTranslocator() {
         super(Material.iron);
         setHardness(1.5F);
         setResistance(10.0F);
+        handler = new EventHandler();
     }
 
     @Override
@@ -186,20 +188,6 @@ public class BlockTranslocator extends Block {
         return false;
     }
 
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
-    public void onBlockHighlight(DrawBlockHighlightEvent event) {
-        if (event.target.typeOfHit == MovingObjectType.BLOCK
-                && event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ)
-                        == this)
-            RayTracer.retraceBlock(
-                    event.player.worldObj,
-                    event.player,
-                    event.target.blockX,
-                    event.target.blockY,
-                    event.target.blockZ);
-    }
-
     @Override
     public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List list) {
         list.add(new ItemStack(this, 1, 0));
@@ -221,4 +209,21 @@ public class BlockTranslocator extends Block {
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister par1IconRegister) {}
+
+    public class EventHandler {
+
+        @SideOnly(Side.CLIENT)
+        @SubscribeEvent
+        public void onBlockHighlight(DrawBlockHighlightEvent event) {
+            if (event.target.typeOfHit == MovingObjectType.BLOCK
+                    && event.player.worldObj.getBlock(event.target.blockX, event.target.blockY, event.target.blockZ)
+                            == BlockTranslocator.this)
+                RayTracer.retraceBlock(
+                        event.player.worldObj,
+                        event.player,
+                        event.target.blockX,
+                        event.target.blockY,
+                        event.target.blockZ);
+        }
+    }
 }
