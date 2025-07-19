@@ -23,6 +23,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import codechicken.lib.raytracer.IndexedCuboid6;
@@ -38,15 +39,14 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCraftingGrid extends Block {
 
-    private RayTracer rayTracer = new RayTracer();
-    public EventHandler handler;
+    private final RayTracer rayTracer = new RayTracer();
 
     @SideOnly(Side.CLIENT)
     public IIcon gridIcon;
 
     public BlockCraftingGrid() {
         super(Material.wood);
-        handler = new EventHandler();
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
     @Override

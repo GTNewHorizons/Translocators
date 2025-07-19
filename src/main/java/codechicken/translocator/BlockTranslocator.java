@@ -26,6 +26,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.IFluidHandler;
 
 import codechicken.lib.math.MathHelper;
@@ -40,14 +41,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockTranslocator extends Block {
 
-    private RayTracer rayTracer = new RayTracer();
-    public EventHandler handler;
+    private final RayTracer rayTracer = new RayTracer();
 
     public BlockTranslocator() {
         super(Material.iron);
         setHardness(1.5F);
         setResistance(10.0F);
-        handler = new EventHandler();
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 
     @Override
