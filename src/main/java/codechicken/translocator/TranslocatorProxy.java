@@ -7,7 +7,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
 import codechicken.lib.packet.PacketCustom;
@@ -31,8 +30,6 @@ public class TranslocatorProxy {
 
         GameRegistry.registerBlock(blockTranslocator, ItemTranslocator.class, "translocator");
         GameRegistry.registerBlock(blockCraftingGrid, "craftingGrid");
-        MinecraftForge.EVENT_BUS.register(blockTranslocator);
-        MinecraftForge.EVENT_BUS.register(blockCraftingGrid);
 
         GameRegistry.registerTileEntity(TileItemTranslocator.class, "itemTranslocator");
         GameRegistry.registerTileEntity(TileLiquidTranslocator.class, "liquidTranslocator");
