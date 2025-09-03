@@ -7,5 +7,7 @@ item.translocator:diamondNugget.name=钻石粒
 
 translocator.regulate=调控
 translocator.filter=过滤
+translocator.update.display=已安装 GT 泵覆盖：流速
+translocator.update.display.dupe=GT 泵覆盖 重复
 
 key.craftingGrid=合成格

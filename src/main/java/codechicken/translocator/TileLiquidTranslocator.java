@@ -6,7 +6,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -34,17 +39,19 @@ public class TileLiquidTranslocator extends TileTranslocator implements IFluidHa
         public double b_end;
 
         public boolean fast;
+        public int custom_fluid_rate;
 
         public MovingLiquid(int src, int dst, FluidStack add) {
             this.src = src;
             this.dst = dst;
             liquid = add;
             fast = attachments[src].fast;
+            custom_fluid_rate = custom_fluid_rates[src];
             capLiquid();
         }
 
         private void capLiquid() {
-            liquid.amount = Math.min(liquid.amount, fast ? 1000 : 100);
+            liquid.amount = Math.min(liquid.amount, fast ? (custom_fluid_rate == 0 ? custom_fluid_rate : 1000) : 100);
         }
 
         public boolean update() {
@@ -56,7 +63,7 @@ public class TileLiquidTranslocator extends TileTranslocator implements IFluidHa
             b_end = a_end;
 
             if (liquid.amount > 0) {
-                liquid.amount = Math.max(liquid.amount - (fast ? 200 : 20), 0);
+                liquid.amount = Math.max(liquid.amount - Math.max(custom_fluid_rate / 5, (fast ? 200 : 20)), 0);
                 return liquid.amount == 0;
             }
             a_end = MathHelper.approachLinear(a_end, 1, 0.2);
@@ -137,7 +144,7 @@ public class TileLiquidTranslocator extends TileTranslocator implements IFluidHa
                 if (a == null || !a.a_eject) continue;
 
                 TankAccess t = attached[i];
-                FluidStack drain = t.drain(a.fast ? 1000 : 100, false);
+                FluidStack drain = t.drain(getFluidRate(i, a.fast), false);
                 if (drain == null || drain.amount == 0) continue;
 
                 if (outputs == null) {
@@ -282,5 +289,86 @@ public class TileLiquidTranslocator extends TileTranslocator implements IFluidHa
         if (attachments[from.ordinal()] != null) return new FluidTankInfo[] { new FluidTankInfo(null, 0) };
 
         return new FluidTankInfo[0];
+    }
+
+    public int[] custom_fluid_rates = new int[6];
+
+    @Override
+    public void createAttachment(int side) {
+        attachments[side] = new LiquidAttachment(side);
+    }
+
+    private int getFluidRate(int i, boolean fast) {
+        int base = fast ? 1000 : 100;
+        if (custom_fluid_rates[i] > 0) {
+            return custom_fluid_rates[i];
+        }
+        return base;
+    }
+
+    public class LiquidAttachment extends Attachment {
+
+        public LiquidAttachment(int side) {
+            super(side);
+        }
+
+        @Override
+        public boolean activate(EntityPlayer player, int subPart) {
+            ItemStack held = player.inventory.getCurrentItem();
+            if (!(GTCompat.isLoaded() && GTCompat.isPumpCover(held))) {
+                super.activate(player, subPart);
+                return true;
+            }
+            if (GTCompat.getPumpCoverRate(held) == custom_fluid_rates[side]) {
+                player.addChatMessage(
+                        new ChatComponentText(StatCollector.translateToLocal("translocator.update.display.dupe")));
+                return true;
+            }
+            if (custom_fluid_rates[side] > 0) dropItem(GTCompat.getItem(custom_fluid_rates[side]));
+            custom_fluid_rates[side] = GTCompat.getPumpCoverRate(held);
+            if (!player.capabilities.isCreativeMode) held.stackSize--;
+            player.addChatMessage(
+                    new ChatComponentText(
+                            StatCollector.translateToLocal("translocator.update.display") + " "
+                                    + custom_fluid_rates[side]
+                                    + " mB/t"));
+            markUpdate();
+            return true;
+        }
+
+        @Override
+        public void stripModifiers() {
+            super.stripModifiers();
+            if (custom_fluid_rates[side] > 0) {
+                dropItem(GTCompat.getItem(custom_fluid_rates[side]));
+                custom_fluid_rates[side] = 0;
+            }
+        }
+
+        @Override
+        public NBTTagCompound write(NBTTagCompound tag) {
+            super.write(tag);
+            tag.setInteger("custom_fluid_rate", custom_fluid_rates[side]);
+            return tag;
+        }
+
+        @Override
+        public void read(NBTTagCompound tag) {
+            super.read(tag);
+            custom_fluid_rates[side] = tag.getInteger("custom_fluid_rate");
+        }
+
+        @Override
+        public void write(PacketCustom packet) {
+            super.write(packet);
+            packet.writeInt(custom_fluid_rates[side]);
+        }
+
+        @Override
+        public void read(PacketCustom packet, boolean described) {
+            super.read(packet, described);
+            custom_fluid_rates[side] = packet.readInt();
+        }
+
     }
 }
