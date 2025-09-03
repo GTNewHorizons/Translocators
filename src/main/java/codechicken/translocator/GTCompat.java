@@ -29,7 +29,8 @@ public class GTCompat {
             pumpCoverRates.put(ItemList.Electric_Pump_UEV.get(1), 2097152); // UEV
             pumpCoverRates.put(ItemList.Electric_Pump_UIV.get(1), 4194304); // UIV
             pumpCoverRates.put(ItemList.Electric_Pump_UMV.get(1), 8388608); // UMV
-            pumpCoverRates.put(ItemList.Electric_Pump_MAX.get(1), Integer.MAX_VALUE); // MAX
+            pumpCoverRates.put(ItemList.Electric_Pump_UXV.get(1), 16777216); // UXV
+            pumpCoverRates.put(ItemList.Electric_Pump_MAX.get(1), Integer.MAX_VALUE); // UXV
 
         }
     }
