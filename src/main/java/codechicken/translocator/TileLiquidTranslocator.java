@@ -51,7 +51,7 @@ public class TileLiquidTranslocator extends TileTranslocator implements IFluidHa
         }
 
         private void capLiquid() {
-            liquid.amount = Math.min(liquid.amount, fast ? (custom_fluid_rate == 0 ? custom_fluid_rate : 1000) : 100);
+            liquid.amount = Math.min(liquid.amount, fast ? (custom_fluid_rate > 0 ? custom_fluid_rate : 1000) : 100);
         }
 
         public boolean update() {
