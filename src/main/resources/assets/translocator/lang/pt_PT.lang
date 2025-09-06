@@ -5,5 +5,7 @@ item.translocator:diamondNugget.name=Pepita de Diamante
 
 translocator.regulate=Regular
 translocator.filter=Filtrar
+translocator.update.display=Bomba GT instalada: Vazão
+translocator.update.display.dupe=Bomba GT Duplicação
 
 key.craftingGrid=Grade de Trabalho

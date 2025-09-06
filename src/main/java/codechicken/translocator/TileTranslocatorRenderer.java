@@ -94,7 +94,21 @@ public class TileTranslocatorRenderer extends TileEntitySpecialRenderer {
                 double end = MathHelper.interpolate(m.b_end, m.a_end, f);
 
                 drawLiquidSpiral(m.src, m.dst, m.liquid, start, end, time, 0, x, y, z);
-                if (m.fast) drawLiquidSpiral(m.src, m.dst, m.liquid, start, end, time, 0.5, x, y, z);
+                int rate = m.custom_fluid_rate == 0 ? m.fast ? 1000 : 100 : m.custom_fluid_rate;
+                if (rate >= 1000) {
+                    int[] levels = { 10000000, 1000000, 100000, 10000, 1000 };
+                    int[] counts = { 5, 4, 3, 2, 1 };
+
+                    for (int i = 0; i < levels.length; i++) {
+                        if (rate >= levels[i]) {
+                            for (int j = 1; j <= counts[i]; j++) {
+                                double offset = (double) j / (counts[i] + 1);
+                                drawLiquidSpiral(m.src, m.dst, m.liquid, start, end, time, offset, x, y, z);
+                            }
+                            break;
+                        }
+                    }
+                }
             }
         }
 
