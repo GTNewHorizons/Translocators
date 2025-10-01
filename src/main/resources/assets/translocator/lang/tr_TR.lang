@@ -5,5 +5,7 @@ item.translocator:diamondNugget.name=Elmas Parçası
 
 translocator.regulate=Düzenleme
 translocator.filter=Filtre
+translocator.update.display=GT Pompa Kapağı Yüklendi: Akış Hızı
+translocator.update.display.dupe=GT Pompa Kapağı Tekrar
 
 key.craftingGrid=Üretim Izgarası

@@ -5,5 +5,7 @@ item.translocator:diamondNugget.name=Diamantová hrudka
 
 translocator.regulate=Relugovat
 translocator.filter=Filtr
+translocator.update.display=Nainstalováno GT čerpadlo: Rychlost toku
+translocator.update.display.dupe=GT čerpadlo Duplikovat
 
 key.craftingGrid=Výrobní rámeček

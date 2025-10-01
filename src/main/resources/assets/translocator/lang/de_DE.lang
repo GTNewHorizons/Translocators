@@ -5,5 +5,7 @@ item.translocator:diamondNugget.name=Diamantnugget
 
 translocator.regulate=Regulieren
 translocator.filter=Filter
+translocator.update.display=GT-Pumpenabdeckung installiert: Durchflussrate
+translocator.update.display.dupe=GT-Pumpenabdeckung Duplikat
 
 key.craftingGrid=Crafting-Feld
