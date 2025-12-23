@@ -5,5 +5,7 @@ item.translocator:diamondNugget.name=Pepita di diamante
 
 translocator.regulate=Regolatore
 translocator.filter=Filtro
+translocator.update.display=Pompa GT installata: Velocità di flusso
+translocator.update.display.dupe=Pompa GT Duplicazione
 
 key.craftingGrid=Griglia di fabbricazione

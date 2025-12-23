@@ -5,3 +5,5 @@ item.translocator:diamondNugget.name=鑽石粒
 
 translocator.regulate=調節
 translocator.filter=過濾器
+translocator.update.display=已安裝 GT 泵蓋：流速
+translocator.update.display.dupe=GT 泵蓋 重複

@@ -5,5 +5,7 @@ item.translocator:diamondNugget.name=Алмазный самородок
 
 translocator.regulate=Регулирование
 translocator.filter=Фильтр
+translocator.update.display=Установлен GT насос: Скорость потока
+translocator.update.display.dupe=GT насос Дублирование
 
 key.craftingGrid=Сетка создания

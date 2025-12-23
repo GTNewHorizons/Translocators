@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import codechicken.core.CommonUtils;
 import codechicken.core.launch.CodeChickenCorePlugin;
 import codechicken.lib.config.ConfigFile;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -37,11 +38,13 @@ public class Translocator {
     public static BlockCraftingGrid blockCraftingGrid;
     public static Item itemDiamondNugget;
     public static boolean disableCraftingGridKey;
+    public static Boolean isGT5uLoaded = null;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         config = new ConfigFile(new File(CommonUtils.getMinecraftDir() + "/config", "Translocator.cfg")).setComment(
                 "Translocator Configuration File\nDeleting any element will restore it to it's default value\nBlock ID's will be automatically generated the first time it's run");
+        isGT5uLoaded = Loader.isModLoaded("gregtech");
     }
 
     @EventHandler
@@ -50,5 +53,8 @@ public class Translocator {
                 .setComment("Set to true to disable placement of crafting grids by keyboard shortcut.")
                 .getBooleanValue(false);
         proxy.init();
+        if (isGT5uLoaded) {
+            GTCompat.init();
+        }
     }
 }
