@@ -315,33 +315,35 @@ public class TileLiquidTranslocator extends TileTranslocator implements IFluidHa
         @Override
         public boolean activate(EntityPlayer player, int subPart) {
             ItemStack held = player.inventory.getCurrentItem();
-            if (!(GTCompat.isLoaded() && GTCompat.isPumpCover(held))) {
-                super.activate(player, subPart);
-                return true;
-            }
-            if (GTCompat.getPumpCoverRate(held) == custom_fluid_rates[side]) {
+            if (Translocator.isGT5uLoaded && GTCompat.isPumpCover(held)) {
+                if (GTCompat.getPumpCoverRate(held) == custom_fluid_rates[side]) {
+                    player.addChatMessage(
+                            new ChatComponentText(StatCollector.translateToLocal("translocator.update.display.dupe")));
+                    return true;
+                }
+                if (custom_fluid_rates[side] > 0) dropItem(GTCompat.getItem(custom_fluid_rates[side]));
+                custom_fluid_rates[side] = GTCompat.getPumpCoverRate(held);
+                if (!player.capabilities.isCreativeMode) held.stackSize--;
                 player.addChatMessage(
-                        new ChatComponentText(StatCollector.translateToLocal("translocator.update.display.dupe")));
+                        new ChatComponentText(
+                                StatCollector.translateToLocal("translocator.update.display") + " "
+                                        + custom_fluid_rates[side]
+                                        + " mB/t"));
+                markUpdate();
                 return true;
             }
-            if (custom_fluid_rates[side] > 0) dropItem(GTCompat.getItem(custom_fluid_rates[side]));
-            custom_fluid_rates[side] = GTCompat.getPumpCoverRate(held);
-            if (!player.capabilities.isCreativeMode) held.stackSize--;
-            player.addChatMessage(
-                    new ChatComponentText(
-                            StatCollector.translateToLocal("translocator.update.display") + " "
-                                    + custom_fluid_rates[side]
-                                    + " mB/t"));
-            markUpdate();
+            super.activate(player, subPart);
             return true;
         }
 
         @Override
         public void stripModifiers() {
             super.stripModifiers();
-            if (custom_fluid_rates[side] > 0) {
-                dropItem(GTCompat.getItem(custom_fluid_rates[side]));
-                custom_fluid_rates[side] = 0;
+            if (Translocator.isGT5uLoaded){
+                if (custom_fluid_rates[side] > 0) {
+                    dropItem(GTCompat.getItem(custom_fluid_rates[side]));
+                    custom_fluid_rates[side] = 0;
+                }
             }
         }
 

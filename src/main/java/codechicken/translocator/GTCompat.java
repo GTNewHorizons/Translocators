@@ -5,41 +5,28 @@ import java.util.Map;
 
 import net.minecraft.item.ItemStack;
 
-import cpw.mods.fml.common.Loader;
 import gregtech.api.enums.ItemList;
 
 public class GTCompat {
 
-    public static Boolean loaded = null;
     public static Map<ItemStack, Integer> pumpCoverRates;
 
     public static void init() {
-        loaded = Loader.isModLoaded("gregtech");
-        if (loaded) {
-            pumpCoverRates = new HashMap<>();
-            pumpCoverRates.put(ItemList.Electric_Pump_LV.get(1), 32); // LV
-            pumpCoverRates.put(ItemList.Electric_Pump_MV.get(1), 128); // MV
-            pumpCoverRates.put(ItemList.Electric_Pump_HV.get(1), 512); // HV
-            pumpCoverRates.put(ItemList.Electric_Pump_EV.get(1), 2048); // EV
-            pumpCoverRates.put(ItemList.Electric_Pump_IV.get(1), 8192); // IV
-            pumpCoverRates.put(ItemList.Electric_Pump_LuV.get(1), 32768); // LuV
-            pumpCoverRates.put(ItemList.Electric_Pump_ZPM.get(1), 131072); // ZPM
-            pumpCoverRates.put(ItemList.Electric_Pump_UV.get(1), 524288); // UV
-            pumpCoverRates.put(ItemList.Electric_Pump_UHV.get(1), 1048576); // UHV
-            pumpCoverRates.put(ItemList.Electric_Pump_UEV.get(1), 2097152); // UEV
-            pumpCoverRates.put(ItemList.Electric_Pump_UIV.get(1), 4194304); // UIV
-            pumpCoverRates.put(ItemList.Electric_Pump_UMV.get(1), 8388608); // UMV
-            pumpCoverRates.put(ItemList.Electric_Pump_UXV.get(1), 16777216); // UXV
-            pumpCoverRates.put(ItemList.Electric_Pump_MAX.get(1), Integer.MAX_VALUE); // UXV
-
-        }
-    }
-
-    public static boolean isLoaded() {
-        if (loaded == null) {
-            init();
-        }
-        return loaded;
+        pumpCoverRates = new HashMap<>();
+        pumpCoverRates.put(ItemList.Electric_Pump_LV.get(1), 32); // LV
+        pumpCoverRates.put(ItemList.Electric_Pump_MV.get(1), 128); // MV
+        pumpCoverRates.put(ItemList.Electric_Pump_HV.get(1), 512); // HV
+        pumpCoverRates.put(ItemList.Electric_Pump_EV.get(1), 2048); // EV
+        pumpCoverRates.put(ItemList.Electric_Pump_IV.get(1), 8192); // IV
+        pumpCoverRates.put(ItemList.Electric_Pump_LuV.get(1), 32768); // LuV
+        pumpCoverRates.put(ItemList.Electric_Pump_ZPM.get(1), 131072); // ZPM
+        pumpCoverRates.put(ItemList.Electric_Pump_UV.get(1), 524288); // UV
+        pumpCoverRates.put(ItemList.Electric_Pump_UHV.get(1), 1048576); // UHV
+        pumpCoverRates.put(ItemList.Electric_Pump_UEV.get(1), 2097152); // UEV
+        pumpCoverRates.put(ItemList.Electric_Pump_UIV.get(1), 4194304); // UIV
+        pumpCoverRates.put(ItemList.Electric_Pump_UMV.get(1), 8388608); // UMV
+        pumpCoverRates.put(ItemList.Electric_Pump_UXV.get(1), 16777216); // UXV
+        pumpCoverRates.put(ItemList.Electric_Pump_MAX.get(1), Integer.MAX_VALUE); // UXV
     }
 
     public static boolean isPumpCover(ItemStack stack) {
