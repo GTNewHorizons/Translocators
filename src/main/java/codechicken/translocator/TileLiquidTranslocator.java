@@ -315,7 +315,7 @@ public class TileLiquidTranslocator extends TileTranslocator implements IFluidHa
         @Override
         public boolean activate(EntityPlayer player, int subPart) {
             ItemStack held = player.inventory.getCurrentItem();
-            if (Translocator.isGT5uLoaded && GTCompat.isPumpCover(held)) {
+            if (Translocator.isGT5uNHLoaded && GTCompat.isPumpCover(held)) {
                 if (GTCompat.getPumpCoverRate(held) == custom_fluid_rates[side]) {
                     player.addChatMessage(
                             new ChatComponentText(StatCollector.translateToLocal("translocator.update.display.dupe")));
@@ -339,7 +339,7 @@ public class TileLiquidTranslocator extends TileTranslocator implements IFluidHa
         @Override
         public void stripModifiers() {
             super.stripModifiers();
-            if (Translocator.isGT5uLoaded) {
+            if (Translocator.isGT5uNHLoaded) {
                 if (custom_fluid_rates[side] > 0) {
                     dropItem(GTCompat.getItem(custom_fluid_rates[side]));
                     custom_fluid_rates[side] = 0;
