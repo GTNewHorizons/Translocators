@@ -38,7 +38,7 @@ public class Translocator {
     public static BlockCraftingGrid blockCraftingGrid;
     public static Item itemDiamondNugget;
     public static boolean disableCraftingGridKey;
-    public static Boolean isGT5uLoaded = null;
+    public static Boolean isGT5uNHLoaded = null;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
