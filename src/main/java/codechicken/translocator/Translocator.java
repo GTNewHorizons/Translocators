@@ -44,7 +44,7 @@ public class Translocator {
     public void preInit(FMLPreInitializationEvent event) {
         config = new ConfigFile(new File(CommonUtils.getMinecraftDir() + "/config", "Translocator.cfg")).setComment(
                 "Translocator Configuration File\nDeleting any element will restore it to it's default value\nBlock ID's will be automatically generated the first time it's run");
-        isGT5uLoaded = Loader.isModLoaded("gregtech");
+        isGT5uNHLoaded = Loader.isModLoaded("gregtech_nh");
     }
 
     @EventHandler
@@ -53,7 +53,7 @@ public class Translocator {
                 .setComment("Set to true to disable placement of crafting grids by keyboard shortcut.")
                 .getBooleanValue(false);
         proxy.init();
-        if (isGT5uLoaded) {
+        if (isGT5uNHLoaded) {
             GTCompat.init();
         }
     }
