@@ -3,6 +3,8 @@ package codechicken.translocator;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Objects;
+import java.util.OptionalInt;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,6 +13,13 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
+
+import com.gtnewhorizon.gtnhlib.capability.Capabilities;
+import com.gtnewhorizon.gtnhlib.capability.item.ItemSink;
+import com.gtnewhorizon.gtnhlib.item.ImmutableItemStack;
+import com.gtnewhorizon.gtnhlib.item.ItemStackPredicate;
 
 import codechicken.core.IGuiPacketSender;
 import codechicken.core.ServerUtils;
@@ -294,7 +303,7 @@ public class TileItemTranslocator extends TileTranslocator {
         boolean filterSet = false;
         for (ItemStack filter : ia.filters) if (filter != null) {
             filterSet = true;
-            if ((!ia.regulate || countMatchingStacks(access, filter, false) > filterCount(ia, filter))
+            if ((!ia.regulate || countMatchingStacks(ia, access, filter, false) > filterCount(ia, filter))
                     && insertAmount(filter, attached) > 0)
                 return true;
         }
@@ -307,7 +316,7 @@ public class TileItemTranslocator extends TileTranslocator {
         for (ItemStack filter : ia.filters) if (filter != null) {
             filterSet = true;
             if (ia.regulate) {
-                if (countMatchingStacks(access, filter, !ia.a_eject) < filterCount(ia, filter)) return false;
+                if (countMatchingStacks(ia, access, filter, !ia.a_eject) < filterCount(ia, filter)) return false;
             } else {
                 if (InventoryUtils.getInsertibleQuantity(access, filter) > 0) return false;
             }
@@ -368,7 +377,31 @@ public class TileItemTranslocator extends TileTranslocator {
         }
     }
 
-    private int countMatchingStacks(InventoryRange inv, ItemStack filter, boolean insertable) {
+    private ItemSink getSink(int side) {
+        BlockCoord pos = new BlockCoord(this).offset(side);
+        TileEntity tile = worldObj.getTileEntity(pos.x, pos.y, pos.z);
+        ItemSink sink = Capabilities.getCapability(tile, ItemSink.class, ForgeDirection.getOrientation(side ^ 1));
+
+        if (sink != null) sink.resetSink();
+
+        return sink;
+    }
+
+    private ItemStackPredicate filterPredicate(final ItemStack filter) {
+        return (ImmutableItemStack stack) -> stack.getItem() == filter.getItem()
+                && (!filter.getHasSubtypes() || stack.getItemMeta() == filter.getItemDamage())
+                && Objects.equals(stack.getTag(), filter.getTagCompound());
+    }
+
+    private int countMatchingStacks(ItemAttachment ia, InventoryRange inv, ItemStack filter, boolean insertable) {
+        // Inventories like Storage Drawers hold far more than an IInventory slot can report, so ask the sink
+        // capability for the real count when the target provides one.
+        ItemSink sink = insertable ? getSink(ia.side) : null;
+        if (sink != null) {
+            OptionalInt stored = sink.getStoredItemsInSink(filterPredicate(filter));
+            if (stored.isPresent()) return stored.getAsInt();
+        }
+
         int c = 0;
         for (int slot : inv.slots) {
             ItemStack stack = inv.inv.getStackInSlot(slot);
@@ -405,7 +438,7 @@ public class TileItemTranslocator extends TileTranslocator {
         int fit = InventoryUtils.getInsertibleQuantity(range, stack);
         if (fit == 0) return 0;
 
-        if (ia.regulate && filter > 0) fit = Math.min(fit, filter - countMatchingStacks(range, stack, true));
+        if (ia.regulate && filter > 0) fit = Math.min(fit, filter - countMatchingStacks(ia, range, stack, true));
 
         return fit > 0 ? fit : 0;
     }
@@ -416,7 +449,7 @@ public class TileItemTranslocator extends TileTranslocator {
 
         int qty = filter < 0 ? stack.getMaxStackSize() : filter;
 
-        if (ia.regulate && filter > 0) qty = Math.min(qty, countMatchingStacks(range, stack, false) - filter);
+        if (ia.regulate && filter > 0) qty = Math.min(qty, countMatchingStacks(ia, range, stack, false) - filter);
 
         return qty > 0 ? qty : 0;
     }
